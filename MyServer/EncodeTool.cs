@@ -101,7 +101,7 @@ namespace MyServer
         /**
          * 序列化
          */
-        public static byte[] EncodeObj(object obj)
+        private static byte[] EncodeObj(object obj)
         {
             using (MemoryStream ms = new MemoryStream())
             {
@@ -116,7 +116,7 @@ namespace MyServer
         /**
          * 反序列化
          */
-        public static object DecodeObj(byte[] data)
+        private static object DecodeObj(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
             {

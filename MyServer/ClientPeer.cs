@@ -6,10 +6,13 @@ namespace MyServer
 {
     public class ClientPeer
     {
+        public int Id { get; set; }
+        public string UserName { get; set; }
         public Socket clientSocket { get; set; }
         private NetMsg msg;
         public ClientPeer()
         {
+            msg = new NetMsg();
             ReceiveArgs = new SocketAsyncEventArgs();
             ReceiveArgs.UserToken = this;
             ReceiveArgs.SetBuffer(new byte[2048], 0, 2048);
@@ -51,7 +54,7 @@ namespace MyServer
         /**
          * 处理数据
          */
-        public void ProcessData()
+        private void ProcessData()
         {
             isProcessingReceive = true;
             //解析包，从缓存区里取出一个完整的包
@@ -77,16 +80,16 @@ namespace MyServer
         /**
          * 发送消息
          */
-        public void SendMsg(int opCode, int subCode, object obj)
+        public void SendMsg(int opCode, int subCode, object value)
         {
-            msg.Change(opCode, subCode, obj);
+            msg.Change(opCode, subCode, value);
             byte[] data = EncodeTool.EncodeMsg(msg);
             byte[] packet = EncodeTool.EncodePacket(data);
             SendMsg(packet);
 
         }
 
-        private void SendMsg(byte[] packet)
+        public void SendMsg(byte[] packet)
         {
             try
             {
@@ -96,7 +99,6 @@ namespace MyServer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw;
             }
         }
 

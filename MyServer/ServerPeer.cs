@@ -43,12 +43,12 @@ namespace MyServer
                     ClientPeer temp = new ClientPeer();
                     temp.receiveCompleted = ReceiveProcessCompleted;
                     temp.ReceiveArgs.Completed += ReceiveArgs_Completed;
-                    clientPeerPool.EnQueue(temp);
+                    clientPeerPool.Enqueue(temp);
                 }
 
                 //绑定到进程
                 serverSocket.Bind(new IPEndPoint(IPAddress.Parse(ip), port));
-                //最大连接数
+                //最大的监听数
                 serverSocket.Listen(maxClient);
                 Console.WriteLine("服务器启动成功");
                 StartAccept(null);
@@ -60,12 +60,12 @@ namespace MyServer
 
         }
 
-        #region 接收客户端的请求
+        #region 接收客户端的连接请求
 
         /**
          * 接收客户端的连接
          */
-        public void StartAccept(SocketAsyncEventArgs e)
+        private void StartAccept(SocketAsyncEventArgs e)
         {
             if (e == null)
             {
@@ -97,10 +97,11 @@ namespace MyServer
         private void ProcessAccept(SocketAsyncEventArgs e)
         {
             semaphore.WaitOne();
-            ClientPeer client = clientPeerPool.DeQueue();
+            ClientPeer client = clientPeerPool.Dequeue();
             client.clientSocket = e.AcceptSocket;
             Console.WriteLine(client.clientSocket.RemoteEndPoint + "客户端连接成功");
             //接收消息
+            StartReceive(client);
             e.AcceptSocket = null;
             StartAccept(e);
         }
@@ -176,7 +177,7 @@ namespace MyServer
         /**
          * 一条消息处理完成后的回调
          */
-        public void ReceiveProcessCompleted(ClientPeer client, NetMsg msg)
+        private void ReceiveProcessCompleted(ClientPeer client, NetMsg msg)
         {
             //交给应用层处理这个消息
             application.Receive(client, msg);
@@ -189,7 +190,7 @@ namespace MyServer
         /**
          * 客户端断开连接
          */
-        public void Disconnect(ClientPeer client, string reason)
+        private void Disconnect(ClientPeer client, string reason)
         {
             try
             {
@@ -203,7 +204,7 @@ namespace MyServer
                 //让客户端处理断开连接
                 client.Disconnect();
 
-                clientPeerPool.EnQueue(client);
+                clientPeerPool.Enqueue(client);
                 semaphore.Release();
             }
             catch (Exception e)

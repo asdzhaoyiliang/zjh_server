@@ -14,12 +14,12 @@ namespace MyServer
             clientPeerQueue = new Queue<ClientPeer>(maxCount);
         }
 
-        public void EnQueue(ClientPeer client)
+        public void Enqueue(ClientPeer client)
         {
             clientPeerQueue.Enqueue(client);
         }
 
-        public ClientPeer DeQueue()
+        public ClientPeer Dequeue()
         {
             return clientPeerQueue.Dequeue();
         }
