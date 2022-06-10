@@ -8,5 +8,7 @@
         public const int Login_SRES = 3;
         public const int GetUserInfo_CREQ = 4;
         public const int GetUserInfo_SRES = 5;
+        public const int GetRankList_CREQ = 6;
+        public const int GetRankList_SRES = 7;
     }
 }

@@ -10,9 +10,11 @@ namespace GameServer.Database
     {
         private static MySqlConnection sqlConnect;
         private static Dictionary<int, ClientPeer> idClientDic;
+        private static RankListDto rankListDto;
 
         public static void StartConnect()
         {
+            rankListDto = new RankListDto();
             idClientDic = new Dictionary<int, ClientPeer>();
             string conStr = "database=zjhgame;data source=127.0.0.1;port=3306;user=root;pwd=root";
             sqlConnect = new MySqlConnection(conStr);
@@ -179,6 +181,23 @@ namespace GameServer.Database
 
             reader.Close();
             return null;
+        }
+
+        public static RankListDto GetRankListDto()
+        {
+            MySqlCommand cmd = new MySqlCommand("select UserName,Coin from userinfo order By Coin desc",sqlConnect);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            rankListDto.Clean();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    RankItemDto dto = new RankItemDto(reader.GetString("UserName"), reader.GetInt32("Coin"));
+                    rankListDto.Add(dto);
+                }
+            }
+            reader.Close();
+            return rankListDto;
         }
     }
 }

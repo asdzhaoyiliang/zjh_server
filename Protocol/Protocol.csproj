@@ -41,6 +41,8 @@
         <Compile Include="Code\AccountCode.cs" />
         <Compile Include="Code\OpCode.cs" />
         <Compile Include="Dto\AccountDto.cs" />
+        <Compile Include="Dto\RankItemDto.cs" />
+        <Compile Include="Dto\RankListDto.cs" />
         <Compile Include="Dto\UserDto.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

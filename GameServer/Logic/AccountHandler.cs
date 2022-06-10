@@ -26,11 +26,26 @@ namespace GameServer.Logic
                 case AccountCode.GetUserInfo_CREQ:
                     GetUserInfo(client);
                     break;
+                case AccountCode.GetRankList_CREQ:
+                    GetRankList(client);
+                    break;
                 default:
                     break;
             }
         }
 
+        /// <summary>
+        /// 客户端获取排行榜
+        /// </summary>
+        /// <param name="client"></param>
+        private void GetRankList(ClientPeer client)
+        {
+            SingleExecute.Instance.Execute(() =>
+            {
+                RankListDto dto = DatabaseManager.GetRankListDto();
+                client.SendMsg(OpCode.Account, AccountCode.GetRankList_SRES,dto);
+            });
+        }
         private void GetUserInfo(ClientPeer client)
         {
             SingleExecute.Instance.Execute(() =>
