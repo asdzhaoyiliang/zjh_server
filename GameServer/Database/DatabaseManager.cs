@@ -199,5 +199,25 @@ namespace GameServer.Database
             reader.Close();
             return rankListDto;
         }
+
+        public static int UpdateCoin(ClientPeer client, int coinCount)
+        {
+            MySqlCommand cmd = new MySqlCommand("update userinfo set Coin = Coin + @coinCount where Id = @id", sqlConnect);
+            cmd.Parameters.AddWithValue("coinCount", coinCount);
+            cmd.Parameters.AddWithValue("id", client.Id);
+            cmd.ExecuteNonQuery();
+
+            MySqlCommand cmd1 = new MySqlCommand("select Coin from userinfo where Id = @id", sqlConnect);
+            cmd1.Parameters.AddWithValue("id", client.Id);
+            MySqlDataReader reader = cmd1.ExecuteReader();
+            int res = 0;
+            if (reader.HasRows)
+            {
+                reader.Read();
+                res = reader.GetInt32("Coin");
+            }
+            reader.Close();
+            return res;
+        }
     }
 }

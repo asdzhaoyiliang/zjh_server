@@ -10,5 +10,8 @@
         public const int GetUserInfo_SRES = 5;
         public const int GetRankList_CREQ = 6;
         public const int GetRankList_SRES = 7;
+        
+        public const int UpdateCoinCount_CREQ = 8;
+        public const int UpdateCoinCount_SRES = 9;
     }
 }
